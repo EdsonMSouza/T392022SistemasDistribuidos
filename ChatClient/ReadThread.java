@@ -1,3 +1,5 @@
-public class ReadThread {
+import java.io.*;
+import java.net.*;
+public class ReadThread extends Thread{
     
 }
