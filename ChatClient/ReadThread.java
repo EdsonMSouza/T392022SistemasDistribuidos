@@ -25,9 +25,10 @@ public class ReadThread extends Thread{
                 if(client.getUserName() != null){
                     System.out.println("[" + client.getUserName() + "]");
                 }
-                
+
             }catch(Exception e){
                 System.out.println("Connection finished");
+                break;
             }
         }
     }
