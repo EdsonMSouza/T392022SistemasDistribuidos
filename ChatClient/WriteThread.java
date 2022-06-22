@@ -1,38 +1,40 @@
 import java.io.*;
 import java.net.*;
-public class WriteThread extends Thread{
+
+public class WriteThread extends Thread {
     private Socket socket;
     private ChatClient client;
     private PrintWriter writer;
 
-    public WriteThread(Socket socket, ChatClient cliente){
+    public WriteThread(Socket socket, ChatClient cliente) {
         this.socket = socket;
         this.client = cliente;
 
         try {
             OutputStream output = socket.getOutputStream();
-            writer =  new PrintWriter(output, true);
+            writer = new PrintWriter(output, true);
 
         } catch (IOException e) {
             System.out.println("Err: " + e.getMessage());
-        }   
+        }
     }
-    public void run(){
+
+    public void run() {
         Console console = System.console();
-        String userName =  console.readLine("\ntype your name: ");
+        String userName = console.readLine("\ntype your name: ");
         client.setUserName(userName);
         writer.println(userName);
 
         String text;
 
-        do{
+        do {
             text = console.readLine("[" + userName + "]");
             writer.println(text);
-        }while(!text.equals("bye"));
+        } while (!text.equals("bye"));
 
-        try{
+        try {
             socket.close();
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Err: " + e.getMessage());
         }
     }

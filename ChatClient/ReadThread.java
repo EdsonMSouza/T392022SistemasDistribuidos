@@ -1,11 +1,11 @@
 import java.io.*;
 import java.net.*;
-public class ReadThread extends Thread{
+
+public class ReadThread extends Thread {
     private BufferedReader reader;
-    private Socket socket;
     private ChatClient client;
 
-    public ReadThread(Socket socket, ChatClient client){
+    public ReadThread(Socket socket, ChatClient client) {
         this.client = client;
 
         try {
@@ -16,17 +16,17 @@ public class ReadThread extends Thread{
         }
     }
 
-    public void run(){
-        while(true){
-            try{
+    public void run() {
+        while (true) {
+            try {
                 String response = reader.readLine();
                 System.out.println("\n" + response);
 
-                if(client.getUserName() != null){
+                if (client.getUserName() != null) {
                     System.out.println("[" + client.getUserName() + "]");
                 }
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("Connection finished");
                 break;
             }

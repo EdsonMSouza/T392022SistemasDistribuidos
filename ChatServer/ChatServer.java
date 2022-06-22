@@ -2,7 +2,7 @@ import java.io.*; // requisições de entrada/saída
 import java.net.*; // conexões de rede (sockets)
 import java.util.*; // fins gerais
 
-public class ChatServer{
+public class ChatServer {
     // porta que ficará disponível para o serviço
     private final int port;
 
@@ -11,22 +11,22 @@ public class ChatServer{
 
     // lista dos Threads (objetos Thread)
     private final Set<UserThread> userThreads = new HashSet<>();
-    
+
     // construtor
-    public ChatServer(int port){
+    public ChatServer(int port) {
         this.port = port;
     }
 
     // método para executar o serviço (servidor)
     // modo listening (escutando)
-    public void execute(){
-        try(ServerSocket serverSocket = new ServerSocket(port)){
+    public void execute() {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
 
             System.out.println("Server executing in port: " + port);
             System.out.println("CTRL+C to finish");
 
             // executando o serviço
-            while(true){
+            while (true) {
                 Socket socket = serverSocket.accept();
 
                 // pegar o IP do cliente
@@ -40,21 +40,21 @@ public class ChatServer{
                 System.out.println(newUser);
             }
 
-        }catch(IOException ioex){
+        } catch (IOException ioex) {
             System.out.println("Server error " + ioex.getMessage());
         }
     }
 
     public static void main(String[] args) {
-        if(args.length < 1){
+        if (args.length < 1) {
             System.out.println("");
             System.out.println("To execute, type:");
             System.out.println("java ChatServer <port>");
-            System.out.println("Eg. java ChatServer 9000");
+            System.out.println("i.e. java ChatServer 9000");
             System.out.println("");
             System.exit(0); // sai do programa sem gerar erro
         }
-        
+
         // vamos pegar o valor (a porta) e executar o serviço
         int port = Integer.parseInt(args[0]); // converte String para inteiro
 
@@ -64,28 +64,29 @@ public class ChatServer{
     }
 
     // implementação de métodos auxiliares para a manutenção do software
-    boolean hasUsers(){
+    boolean hasUsers() {
         return !this.userNames.isEmpty();
     }
 
-    Set<String> getUserNames(){
+    Set<String> getUserNames() {
         return this.userNames;
     }
 
-    public void addUserName(String userName){
+    public void addUserName(String userName) {
         userNames.add(userName);
     }
 
-    public void removeUser(String userName, UserThread aUser){
+    public void removeUser(String userName, UserThread aUser) {
         boolean removed = userNames.remove(userName);
-        if (removed){
+        if (removed) {
             userThreads.remove(aUser);
             System.out.println("User: " + userName + " exit.");
         }
     }
 
     // envia uma mensagem de aviso para a "rede", comunicando a saída do User
-    public void broadcast(String serverMessage, UserThread excludeUser){
-        userThreads.stream().filter( (aUser) -> (aUser != excludeUser)).forEachOrdered( (aUser) -> aUser.sendMessage(serverMessage));
+    public void broadcast(String serverMessage, UserThread excludeUser) {
+        userThreads.stream().filter((aUser) -> (aUser != excludeUser))
+                .forEachOrdered((aUser) -> aUser.sendMessage(serverMessage));
     }
 }

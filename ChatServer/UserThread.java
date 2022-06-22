@@ -1,18 +1,18 @@
 import java.io.*; // requisições de entrada/saída
 import java.net.*; // conexões de rede (sockets)
 
-public class UserThread extends Thread{
+public class UserThread extends Thread {
     private final Socket socket; // meio de comunicação (TCP)
     private final ChatServer server; // o servidor de Chat
     private PrintWriter writer; // Escrever no buffer de saída (I/[O])
 
-    public UserThread(Socket socket, ChatServer server){
+    public UserThread(Socket socket, ChatServer server) {
         this.socket = socket;
         this.server = server;
     }
 
     @Override
-    public void run(){
+    public void run() {
         try {
             // leitura dos dados
             InputStream input = socket.getInputStream();
@@ -43,12 +43,11 @@ public class UserThread extends Thread{
                 clientMessage = reader.readLine();
                 // aqui é um ponto crítico para realizar várias verificações
 
-                // * filtragem de palavras não permitidas (azul -> ***)
-                //   Entrada: O céu está azul
-                //   Saída:   O céu está ***
+                // filtragem de palavras não permitidas (azul -> ***)
+                // Entrada: O céu está azul
+                // Saída: O céu está ***
                 // Uma ideia: enviar um broadcast avisando sobre palavras não permitidas
-
-                // * Request via API 
+                // * Request via API
 
                 serverMessage = "[" + userName + "]: " + clientMessage;
                 server.broadcast(serverMessage, this);
@@ -57,15 +56,16 @@ public class UserThread extends Thread{
                 System.out.println(serverMessage);
 
                 // armazena os dados enviados em um BD e/ou Log
+                // procedimentos para armazenamento no BD
 
-            }while(!clientMessage.equals("bye"));
+            } while (!clientMessage.equals("bye"));
 
             // uma vez o usuário desconectado...
-            
+
             // remover o usuário
             server.removeUser(userName, this);
-            
-            //fecha a conexão
+
+            // fecha a conexão
             socket.close();
 
             // avisa a galera que userName saiu da parada!!!!!
@@ -76,15 +76,16 @@ public class UserThread extends Thread{
             System.out.println("Err: " + ioe.getMessage());
         }
     }
-    void printUsers(){
-        if(server.hasUsers()){ // classe ChatServer
-            writer.println("Users connected: " + server.getUserNames()); 
-        }else{
+
+    void printUsers() {
+        if (server.hasUsers()) { // classe ChatServer
+            writer.println("Users connected: " + server.getUserNames());
+        } else {
             writer.println("No users connected");
         }
     }
 
-    void sendMessage(String message){
+    void sendMessage(String message) {
         writer.println(message);
     }
 }
